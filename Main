@@ -1,0 +1,28 @@
+local Color = "Blue"
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/NovazUwU/Utility/main/Roblox"))()
+
+if not Disabled then -- electron sucks so adonis nc check disabler
+    for i,v in next, getgc(true) do 
+        if type(v) == "table" and rawget(v, "namecallInstance") then 
+            rawset(v, "namecallInstance", function() return false end)
+        end 
+    end 
+    getgenv().Disabled = true 
+end 
+
+local Hit = ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("Hit")
+
+HighlightESP(Color)
+
+local Old 
+Old = hookmetamethod(game, "__namecall", function(self, ...)
+    if self == Hit then 
+        local Target = GetClosestPlayerToMouse() 
+        local Count = select(2, ...)
+        if Target then 
+            return Hit.FireServer(Hit, Target, Count)
+        end 
+    end 
+    return Old(self, ...)
+end)
